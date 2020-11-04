@@ -16,10 +16,33 @@ public:
 	APlayerCharacter();
 
 protected:
+	UPROPERTY(EditDefaultsOnly, Category = "Health")
+		float maxHealth;
+
+	UPROPERTY(ReplicatedUsing = OnRep_CurrentHealth)
+		float currentHealth;
+
+	UFUNCTION()
+		void OnRep_CurrentHealth();
+
+	void OnHealthUpdate();
+
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-public:	
+public:
+	UFUNCTION(BlueprintPure, Category = "Health")
+	FORCEINLINE float GetMaxHealth() const { return maxHealth; }
+	UFUNCTION(BlueprintPure, Category = "Health")
+	FORCEINLINE float GetCurrentHealth() const { return currentHealth; }
+
+	//UFUNCTION(BlueprintCallable, Category = "Health")
+	FORCEINLINE void SetCurrentHealth(float value);
+
+	UFUNCTION(BlueprintCallable, Category = "Health")
+	float TakeDamage(float dmgTaken, struct FDamageEvent const& dmgEvent, AController* eventInstigator, AActor* dmgCauser) override;
+
+	void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
