@@ -8,7 +8,12 @@ APlayerCharacter::APlayerCharacter()
 {
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
-
+	
+	auto mesh = GetMesh();
+	TArray<FName> names;
+	mesh->GetBoneNames(names);
+	for (auto& n : names) 
+		UE_LOG(LogTemp, Warning, TEXT("Bone: %s"), *n.ToString());
 }
 
 // Called when the game starts or when spawned
@@ -22,7 +27,7 @@ void APlayerCharacter::BeginPlay()
 void APlayerCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
+	AddActorLocalRotation(FRotator(0, 10, 0));
 }
 // Called to bind functionality to input
 void APlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
